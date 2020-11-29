@@ -25,6 +25,7 @@
 package travelling.salesman.problem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -80,6 +81,8 @@ public class TSM extends ProblemDomain{
             Population pop = new Population(citySize);
             populationPool.add(pop);
         }
+        populationHistory = new ArrayList<>();
+        Population bestPop = generateFitnesses();
     }
     
     public final Population generateFitnesses(){
@@ -92,6 +95,10 @@ public class TSM extends ProblemDomain{
                 bestPop = pop;
                 bestValue = pop.getFitness();
             }
+        }
+        if (populationHistory.size()==0 || populationHistory.get(populationHistory.size()-1)!= bestPop){
+            populationHistory.add(bestPop);
+            System.out.println(Arrays.toString(bestPop.getPop()) + " " + bestPop.getFitness());
         }
         return bestPop;
     }

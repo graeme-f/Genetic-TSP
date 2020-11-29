@@ -34,6 +34,7 @@ import java.util.Random;
 abstract public class ProblemDomain {
     protected int populationSize;
     protected ArrayList<Population> populationPool;
+    protected ArrayList<Population> populationHistory;
     protected Population bestPop;
     public Selection selection;
     Crossover crossover;
