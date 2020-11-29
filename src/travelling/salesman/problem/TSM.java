@@ -39,8 +39,8 @@ public class TSM extends ProblemDomain{
     private final int mapScale;
     private final int mapMargin;
     
-    TSM (int popSize, int mutate, int citys, int size, int scale, int margin){
-        super(popSize, mutate);
+    TSM (int popSize, int mutate, int generations, int citys, int size, int scale, int margin){
+        super(popSize, mutate, generations);
         citySize = citys;
         mapSize = size;
         mapScale = scale;

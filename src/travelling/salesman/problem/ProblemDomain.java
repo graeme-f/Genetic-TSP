@@ -38,10 +38,12 @@ abstract public class ProblemDomain {
     public Selection selection;
     Crossover crossover;
     protected int mutationRate;
+    protected int generationRun;
 
-    ProblemDomain(int popSize, int mutate){
+    ProblemDomain(int popSize, int mutate, int generations){
         populationSize = popSize;
         mutationRate = mutate;
+        generationRun = generations;
     }
     
     public ArrayList<Population> mutate(ArrayList<Population> pool){
@@ -50,6 +52,17 @@ abstract public class ProblemDomain {
             pool.get(i).mutate(mutationRate);
         }
         return pool;
+    }
+    
+    public void setMutationRate(int mutate){
+        mutationRate = mutate;
+    }
+    
+    public void setGenerationRun(int generations){
+        generationRun = generations;
+    }
+    public int getGenerationRun(){
+        return generationRun;
     }
     
     public void promoteMatingPool(ArrayList<Population> matingPool){

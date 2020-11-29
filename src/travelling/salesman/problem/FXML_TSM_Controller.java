@@ -26,10 +26,7 @@ package travelling.salesman.problem;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,14 +37,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 
 /**
  *
@@ -61,6 +55,10 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Button    btnShowCostMatrix;
     @FXML private Label     lblPopulation;
     @FXML private Slider    sldrPopulation;
+    @FXML private ChoiceBox chbSelectionRule;
+    @FXML private ChoiceBox chbCrossoverRule;
+    @FXML private Label     lblMutationRate;
+    @FXML private Slider    sldrMutationRate;
     @FXML private CheckBox  cbShowRoute;
     @FXML private CheckBox  cbShowBestRoute;
     @FXML private Label     lblRouteDistance;
@@ -68,6 +66,8 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Label     lblIndividual;
     @FXML private Label     lblBestPop;
     @FXML private CheckBox  cbShowGrid;
+    @FXML private Slider    sldrGenerations;
+    @FXML private Button    btnNextGeneration;
     
     @FXML private void showCostMatrix(ActionEvent event) {
         event.consume();
@@ -103,13 +103,19 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private void generateAction(ActionEvent event) {
         // Initialise
         tsm = new TSM((int)sldrPopulation.getValue()
-                     ,20
+                     ,(int)sldrMutationRate.getValue()
+                     ,generationCount((int)sldrGenerations.getValue())
                      ,(int)sldrCities.getValue()
                      ,57
                      ,MAP_SCALE
                      , 20);
         tsm.selection = new Tournament((int)sldrPopulation.getValue(), 2);
-        tsm.crossover = new PMX();
+        String value = (String) chbCrossoverRule.getValue();
+        if ("Partially Mapped Crossover".equals(value)){
+            tsm.crossover = new PMX();
+        } else if  ("Order Crossover".equals(value)){
+            tsm.crossover = new PMX(); // OX();
+        }
         // Evaluate
         bestPop = tsm.generateFitnesses();
         
@@ -121,16 +127,20 @@ public class FXML_TSM_Controller implements Initializable {
     }
 
     @FXML private void nextGeneration(ActionEvent event){
+        // TODO move some of this code into ProblemDomain ???
         if (tsm != null){
-            ArrayList<Population> matingPool;
-            matingPool = tsm.selection.select(tsm.getPopPool());
-            matingPool = tsm.crossover.combine(matingPool);
-            matingPool = tsm.mutate(matingPool);
-            if (elitism){
-                matingPool.set(0, bestPop);
+            System.out.println(tsm.getGenerationRun());
+            for (int i = 0; i<tsm.getGenerationRun(); i++){
+                ArrayList<Population> matingPool;
+                matingPool = tsm.selection.select(tsm.getPopPool());
+                matingPool = tsm.crossover.combine(matingPool);
+                matingPool = tsm.mutate(matingPool);
+                if (elitism){
+                    matingPool.set(0, bestPop);
+                }
+                tsm.promoteMatingPool(matingPool);
+                bestPop = tsm.generateFitnesses();
             }
-            tsm.promoteMatingPool(matingPool);
-            bestPop = tsm.generateFitnesses();
         }
         drawCities(event);
     }
@@ -166,6 +176,12 @@ public class FXML_TSM_Controller implements Initializable {
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        chbSelectionRule.getItems().add("Tournament");
+        chbSelectionRule.setValue("Tournament");
+        chbCrossoverRule.getItems().add("Partially Mapped Crossover");
+        chbCrossoverRule.setValue("Partially Mapped Crossover");
+        
         sldrCities.valueProperty().addListener((ObservableValue<? extends Number> ov
                                                ,Number old_val
                                                ,Number new_val) -> {
@@ -177,12 +193,41 @@ public class FXML_TSM_Controller implements Initializable {
                                                    ,Number new_val) -> {
             lblPopulation.setText("Population (" + new_val.intValue() +")");
         });
+
+        sldrMutationRate.valueProperty().addListener((ObservableValue<? extends Number> ov
+                                                   ,Number old_val
+                                                   ,Number new_val) -> {
+            lblMutationRate.setText("Mutation (" + new_val.intValue() +"%)");
+            if (tsm != null){
+                tsm.setMutationRate(new_val.intValue());
+            }
+        });
+        
+        sldrGenerations.valueProperty().addListener((ObservableValue<? extends Number> ov
+                                                   ,Number old_val
+                                                   ,Number new_val) -> {
+            int generations = generationCount(new_val.doubleValue());
+            if (generations == 1){
+                btnNextGeneration.setText("Next Genaration");
+            } else {
+                btnNextGeneration.setText(generations +" Genarations");
+            }
+            if (tsm != null){
+                tsm.setGenerationRun(generations);
+            }
+        });
         
         gc = canvas.getGraphicsContext2D();
         currentRoute = 0;
         displayMap();
     }
     
+    private int generationCount(double g){
+        int exp = (int)g;
+        int mult = 1;
+        if (g-exp > 0.5) mult = 5;
+        return mult*(int)Math.pow(10,exp);
+    }
     public void displayMap(){
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setStroke(Color.rgb(0,0,0));
