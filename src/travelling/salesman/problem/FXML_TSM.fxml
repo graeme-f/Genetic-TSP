@@ -32,8 +32,8 @@
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -41,30 +41,30 @@
                <children>
                   <Label fx:id="lblCities" text="Cities (10)" />
                   <Label fx:id="lblPopulation" text="Population (10)" GridPane.rowIndex="2" />
-                  <Label text="Label" GridPane.rowIndex="12" />
+                  <Label fx:id="lblEntries" text="Entries (2)" GridPane.rowIndex="4" />
                   <Label text="Label" GridPane.rowIndex="13" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="12" />
                   <TextField GridPane.columnIndex="1" GridPane.rowIndex="13" />
-                  <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateAction" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Button fx:id="btnNextIndividual" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <Label fx:id="lblIndividual" text="Route 1 of n" GridPane.rowIndex="8" />
+                  <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateAction" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Button fx:id="btnNextIndividual" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Label fx:id="lblIndividual" text="Route 1 of n" GridPane.rowIndex="9" />
                   <CheckBox fx:id="cbShowGrid" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Grid" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <CheckBox fx:id="cbShowRoute" mnemonicParsing="false" onAction="#drawCities" text="Show Route" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                  <Label fx:id="lblRouteDistance" text="Distance " GridPane.rowIndex="9" />
-                  <Label fx:id="lblBestPop" text="Best route" GridPane.rowIndex="10" />
-                  <CheckBox fx:id="cbShowBestRoute" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Best" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                  <Button fx:id="btnNextGeneration" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="11" />
-                  <Button fx:id="btnShowCostMatrix" disable="true" mnemonicParsing="false" onAction="#showCostMatrix" text="Cost Matrix" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="cbShowRoute" mnemonicParsing="false" onAction="#drawCities" text="Show Route" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                  <Label fx:id="lblRouteDistance" text="Distance " GridPane.rowIndex="10" />
+                  <Label fx:id="lblBestPop" text="Best route" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cbShowBestRoute" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Best" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                  <Button fx:id="btnNextGeneration" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="12" />
+                  <Button fx:id="btnShowCostMatrix" disable="true" mnemonicParsing="false" onAction="#showCostMatrix" text="Cost Matrix" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                   <Slider fx:id="sldrCities" blockIncrement="1.0" majorTickUnit="5.0" max="30.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
                   <Slider fx:id="sldrPopulation" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Crossover Rule" GridPane.rowIndex="4" />
-                  <Label fx:id="lblMutationRate" text="Mutation (10%)" GridPane.rowIndex="5" />
+                  <Label text="Crossover Rule" GridPane.rowIndex="5" />
+                  <Label fx:id="lblMutationRate" text="Mutation (10%)" GridPane.rowIndex="6" />
                   <Label text="Selection Rule" GridPane.rowIndex="3" />
-                  <Slider fx:id="sldrMutationRate" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" minorTickCount="1" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Slider fx:id="sldrMutationRate" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" minorTickCount="1" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <ChoiceBox fx:id="chbSelectionRule" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ChoiceBox fx:id="chbCrossoverRule" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Slider fx:id="sldrGenerations" blockIncrement="0.5" majorTickUnit="1.0" max="6.0" minorTickCount="1" GridPane.rowIndex="11" />
-                  <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="6" />
+                  <ChoiceBox fx:id="chbCrossoverRule" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Slider fx:id="sldrGenerations" blockIncrement="0.5" majorTickUnit="1.0" max="6.0" minorTickCount="1" GridPane.rowIndex="12" />
+                  <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="7" />
+                  <Slider fx:id="sldrEntries" blockIncrement="1.0" majorTickUnit="2.0" max="10.0" min="1.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="2.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <Canvas fx:id="canvas" height="600.0" width="600.0" />

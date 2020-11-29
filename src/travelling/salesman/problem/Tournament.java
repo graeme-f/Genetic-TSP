@@ -47,6 +47,11 @@ public class Tournament extends Selection{
         super(poolSize);
         this.tournamentSize = tournamentSize;
     }
+    
+    public void setTournamentSize(int size){
+        tournamentSize = size;
+    }
+    
     @Override
     public ArrayList<Population> select(ArrayList<Population> pool){
         matingPool = new ArrayList();

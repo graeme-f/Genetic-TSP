@@ -56,6 +56,8 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Label     lblPopulation;
     @FXML private Slider    sldrPopulation;
     @FXML private ChoiceBox chbSelectionRule;
+    @FXML private Label     lblEntries;
+    @FXML private Slider    sldrEntries;
     @FXML private ChoiceBox chbCrossoverRule;
     @FXML private Label     lblMutationRate;
     @FXML private Slider    sldrMutationRate;
@@ -195,8 +197,18 @@ public class FXML_TSM_Controller implements Initializable {
                                                    ,Number old_val
                                                    ,Number new_val) -> {
             lblPopulation.setText("Population (" + new_val.intValue() +")");
+            sldrEntries.setMax(new_val.intValue());
         });
 
+        sldrEntries.valueProperty().addListener((ObservableValue<? extends Number> ov
+                                                ,Number old_val
+                                                ,Number new_val) -> {
+            if (null!=tsm && (tsm.selection instanceof Tournament)){
+                ((Tournament)tsm.selection).setTournamentSize(new_val.intValue());
+            }
+            lblEntries.setText("Entries (" + new_val.intValue() +")");
+        });
+        
         sldrMutationRate.valueProperty().addListener((ObservableValue<? extends Number> ov
                                                    ,Number old_val
                                                    ,Number new_val) -> {
