@@ -64,6 +64,7 @@
                   <ChoiceBox fx:id="chbSelectionRule" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <ChoiceBox fx:id="chbCrossoverRule" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Slider fx:id="sldrGenerations" blockIncrement="0.5" majorTickUnit="1.0" max="6.0" minorTickCount="1" GridPane.rowIndex="11" />
+                  <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="6" />
                </children>
             </GridPane>
             <Canvas fx:id="canvas" height="600.0" width="600.0" />

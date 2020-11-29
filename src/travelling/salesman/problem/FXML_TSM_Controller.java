@@ -59,6 +59,7 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private ChoiceBox chbCrossoverRule;
     @FXML private Label     lblMutationRate;
     @FXML private Slider    sldrMutationRate;
+    @FXML private CheckBox  cbElitism;
     @FXML private CheckBox  cbShowRoute;
     @FXML private CheckBox  cbShowBestRoute;
     @FXML private Label     lblRouteDistance;
@@ -129,7 +130,6 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private void nextGeneration(ActionEvent event){
         // TODO move some of this code into ProblemDomain ???
         if (tsm != null){
-            System.out.println(tsm.getGenerationRun());
             for (int i = 0; i<tsm.getGenerationRun(); i++){
                 ArrayList<Population> matingPool;
                 matingPool = tsm.selection.select(tsm.getPopPool());
@@ -145,6 +145,9 @@ public class FXML_TSM_Controller implements Initializable {
         drawCities(event);
     }
     
+    @FXML private void elitism(ActionEvent event){
+        elitism = cbElitism.isSelected();
+    }
     
     @FXML private void drawCities(ActionEvent event) {
         // Display
