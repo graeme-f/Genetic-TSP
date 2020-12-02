@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * @author gfoster
  */
 abstract public class Crossover {
-        public ArrayList<Population> combine(ArrayList<Population> matingPool){
+        public ArrayList<Population> combine(ArrayList<Population> matingPool, int generation){
         ArrayList<Population> crossoverPool = new ArrayList();
         Population parent1;
         Population parent2;
@@ -39,12 +39,12 @@ abstract public class Crossover {
         for (int i = 0; i<matingPool.size(); i+=2){
             parent1 = matingPool.get(i);
             parent2 = matingPool.get((i+1)%matingPool.size()); // incase the matting pool has an odd number of parents
-            offspring = crossover(parent1, parent2);
+            offspring = crossover(parent1, parent2, generation);
             crossoverPool.add(offspring[0]);
             crossoverPool.add(offspring[1]);
         }
         return crossoverPool;
     }
 
-    abstract Population[] crossover(Population P1, Population P2);
+    abstract Population[] crossover(Population P1, Population P2, int generation);
 } // end of class Crossover

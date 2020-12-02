@@ -32,6 +32,8 @@ import java.util.Random;
  * @author gfoster
  */
 abstract public class ProblemDomain {
+    private static int generationCount = 0;
+
     protected int populationSize;
     protected ArrayList<Population> populationPool;
     protected ArrayList<Population> populationHistory;
@@ -45,6 +47,7 @@ abstract public class ProblemDomain {
         populationSize = popSize;
         mutationRate = mutate;
         generationRun = generations;
+        generationCount = 0;
     }
     
     public ArrayList<Population> mutate(ArrayList<Population> pool){
@@ -68,6 +71,14 @@ abstract public class ProblemDomain {
     
     public void promoteMatingPool(ArrayList<Population> matingPool){
         populationPool = matingPool;
+    }
+    
+    public static int getGeneration(){
+        return generationCount;
+    }
+    
+    public void newGeneration(){
+        generationCount++;
     }
     
     abstract protected int fitness(Population pop);

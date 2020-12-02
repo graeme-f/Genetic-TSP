@@ -33,10 +33,37 @@ import java.util.ArrayList;
 abstract public class Selection {
     int poolSize;
     ArrayList<Population> matingPool;
+    double [] probability;
     
     Selection (int poolSize){
         this.poolSize = poolSize;
+        probability = new double[poolSize];
     }
-    abstract public ArrayList<Population> select(ArrayList<Population> pool);
+    
+    public void prepare(ArrayList<Population> pool){
+        // The travellign Salesman Problem is looking for a minimum so the inverse fitness is 
+        // required to calculate the probabilities
+        inverseProbability(pool);
+    }
 
+    private void inverseProbability(ArrayList<Population> pool){
+        // Calculate the probability of each population being selected
+        // This is based on the inverse of the fitness
+        double sum =0;
+        double p;
+        for (int i = 0; i < poolSize; i++){
+            p = 1.0/pool.get(i).getFitness();
+            sum += p;
+            probability[i] = p;
+        }
+        for (int i = 0; i < poolSize; i++){
+            probability[i] /= sum;
+            // make the probability cumulative
+            if (i != 0){
+                probability[i] += probability[i-1];
+            }
+        }        
+    } // end of method inverseProbability()
+    
+    abstract public ArrayList<Population> select(ArrayList<Population> pool);
 } // end of class Selection

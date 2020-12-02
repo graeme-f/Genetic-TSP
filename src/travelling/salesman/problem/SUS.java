@@ -28,49 +28,33 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * A random selection of individuals are selected from the population pool.
- * The number selected is based on tournamentSize. The fittest individual is
- * then selected to go into the mating pool. Same individuals can be selected 
- * more than once.
- * The greater the value of tournamentSize the greater the chance that the
- * fittest individuals will dominate the mating pool. The smaller the tournament
- * size then the greater the diversity of the mating pool will be.
- * 
- * Being selected for the tournament is always random, but once selected the 
- * fittest individual will always win.
- * 
+ *
  * @author gfoster
  */
-public class Tournament extends Selection{
-    int tournamentSize;
-    Tournament (int poolSize, int tournamentSize){
+public class SUS extends Selection{
+    SUS (int poolSize){
         super(poolSize);
-        this.tournamentSize = tournamentSize;
     }
-    
-    public void setTournamentSize(int size){
-        tournamentSize = size;
-    }
-    
-    @Override
-    public void prepare(ArrayList<Population> pool){}
     
     @Override
     public ArrayList<Population> select(ArrayList<Population> pool){
-        matingPool = new ArrayList();
+        double distance = 1.0/poolSize;
         Random r = new Random();
-        int N = pool.size();
+        double posn = r.nextDouble();
+        matingPool = new ArrayList();
         for (int i = 0; i < poolSize; i++){
-            Population best = null;
-            for (int j = 0; j < tournamentSize; j++){
-                int selectID = r.nextInt(N);
-                Population ind = pool.get(selectID);
-                if ((best==null)||(ind.getFitness() < best.getFitness())){
-                    best = ind;
+            for (int j = 0; j < poolSize; j++){
+                if (posn < probability[j]){
+                    matingPool.add(pool.get(j));
+                    break;
+                }
+                posn += distance;
+                if (posn > 1){
+                    posn -= 1;
                 }
             }
-            matingPool.add(best);
         }
         return matingPool;
     }
-} // end of class Tournament
+
+} // end of class SUS

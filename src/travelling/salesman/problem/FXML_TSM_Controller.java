@@ -26,6 +26,7 @@ package travelling.salesman.problem;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -71,6 +72,7 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private CheckBox  cbShowGrid;
     @FXML private Slider    sldrGenerations;
     @FXML private Button    btnNextGeneration;
+    @FXML private Button    btnShowHistory;
     
     @FXML private void showCostMatrix(ActionEvent event) {
         event.consume();
@@ -94,6 +96,22 @@ public class FXML_TSM_Controller implements Initializable {
         inputStage.showAndWait();
     }
     
+    @FXML private void showHistory(ActionEvent event) throws IOException {
+        event.consume();
+        
+        Scene newScene;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLHistory.fxml"));
+        newScene = new Scene(loader.load());
+        
+        Stage inputStage = new Stage();
+        inputStage.initOwner(TravellingSalesmanProblem.primaryStage);
+        inputStage.setTitle("History");
+        inputStage.setScene(newScene);
+        FXMLHistoryController hc = loader.<FXMLHistoryController>getController();
+        hc.displayHistoryGraph(tsm.populationHistory);
+        inputStage.showAndWait();
+    } // end of method showHistory()
+    
     @FXML private Canvas    canvas;
     
     private TSM tsm;
@@ -112,7 +130,20 @@ public class FXML_TSM_Controller implements Initializable {
                      ,57
                      ,MAP_SCALE
                      , 20);
-        tsm.selection = new Tournament((int)sldrPopulation.getValue(), 2);
+        String selectionValue = (String)chbSelectionRule.getValue();
+        switch (selectionValue) {
+            case "Roulette":
+                tsm.selection = new Roulette((int)sldrPopulation.getValue());
+                break;
+            case "Stochastic Universal Sampling":
+                tsm.selection = new SUS((int)sldrPopulation.getValue());
+                break;
+            case "Tournament":
+                tsm.selection = new Tournament((int)sldrPopulation.getValue(), (int)sldrEntries.getValue());
+                break;
+            default:
+                break;
+        }
         String value = (String) chbCrossoverRule.getValue();
         if ("Partially Mapped Crossover".equals(value)){
             tsm.crossover = new PMX();
@@ -132,10 +163,13 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private void nextGeneration(ActionEvent event){
         // TODO move some of this code into ProblemDomain ???
         if (tsm != null){
+            tsm.selection.prepare(tsm.getPopPool());
+            System.out.println(tsm.getGenerationRun());
             for (int i = 0; i<tsm.getGenerationRun(); i++){
+                tsm.newGeneration();
                 ArrayList<Population> matingPool;
                 matingPool = tsm.selection.select(tsm.getPopPool());
-                matingPool = tsm.crossover.combine(matingPool);
+                matingPool = tsm.crossover.combine(matingPool, TSM.getGeneration());
                 matingPool = tsm.mutate(matingPool);
                 if (elitism){
                     matingPool.set(0, bestPop);
@@ -145,6 +179,7 @@ public class FXML_TSM_Controller implements Initializable {
             }
         }
         drawCities(event);
+        btnShowHistory.setDisable(false);
     }
     
     @FXML private void elitism(ActionEvent event){
@@ -181,9 +216,10 @@ public class FXML_TSM_Controller implements Initializable {
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        chbSelectionRule.getItems().add("Roulette");        
+        chbSelectionRule.getItems().add("Stochastic Universal Sampling");
         chbSelectionRule.getItems().add("Tournament");
-        chbSelectionRule.setValue("Tournament");
+        chbSelectionRule.setValue("Roulette");
         chbCrossoverRule.getItems().add("Partially Mapped Crossover");
         chbCrossoverRule.setValue("Partially Mapped Crossover");
         

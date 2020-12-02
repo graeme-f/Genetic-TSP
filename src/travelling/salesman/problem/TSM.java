@@ -82,7 +82,7 @@ public class TSM extends ProblemDomain{
             populationPool.add(pop);
         }
         populationHistory = new ArrayList<>();
-        Population bestPop = generateFitnesses();
+        bestPop = generateFitnesses();
     }
     
     public final Population generateFitnesses(){
@@ -96,9 +96,10 @@ public class TSM extends ProblemDomain{
                 bestValue = pop.getFitness();
             }
         }
+        
         if (populationHistory.size()==0 || populationHistory.get(populationHistory.size()-1)!= bestPop){
             populationHistory.add(bestPop);
-            System.out.println(Arrays.toString(bestPop.getPop()) + " " + bestPop.getFitness());
+            System.out.println(bestPop.getGeneration() + Arrays.toString(bestPop.getPop()) + " " + bestPop.getFitness());
         }
         return bestPop;
     }

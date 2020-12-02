@@ -24,8 +24,6 @@
 
 package travelling.salesman.problem;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -33,15 +31,19 @@ import java.util.Random;
  * @author gfoster
  */
 public class Population {
+    
+    private int generation;
     private int[] individuals;
     private int fitnessValue;
     private boolean selected;
     
-    Population(int[] individuals){
+    Population(int[] individuals, int generationCount){
         this.individuals = individuals;
+        generation = generationCount;
     }
     
     Population(int size){
+        generation = 0;
         individuals = new int[size];
         for (int i = 0; i < size; i++){
             individuals[i] = i;
@@ -88,6 +90,7 @@ public class Population {
         }
     }
     
+    public int getGeneration(){return generation;}
     public int[] getPop(){return individuals;}
     public int getSize(){return individuals.length;}
     public void setFitness(int fitness){fitnessValue = fitness;}

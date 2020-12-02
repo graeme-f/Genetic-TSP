@@ -65,7 +65,7 @@ import java.util.Random;
  */
 public class PMX extends Crossover {
     @Override
-    protected Population[] crossover(Population pop1, Population pop2){
+    protected Population[] crossover(Population pop1, Population pop2, int generation){
         Random r = new Random();
         int size = pop1.getSize();
         Population[] result = new Population[2];
@@ -94,8 +94,8 @@ public class PMX extends Crossover {
             offspring1[i]=mapping(mapping1,mapping2,p1[i]);
             offspring2[i]=mapping(mapping2,mapping1,p2[i]);            
         }
-        result[0] = new Population(offspring1);
-        result[1] = new Population(offspring2);
+        result[0] = new Population(offspring1, generation);
+        result[1] = new Population(offspring2, generation);
         // display crossover result
         return result;
     }
