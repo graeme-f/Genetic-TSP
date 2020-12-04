@@ -54,7 +54,7 @@ abstract public class ProblemDomain {
     public void setProgressUpdate(BiConsumer<Integer, Integer> progressUpdate) {
         this.progressUpdate = progressUpdate ;
     }
-    public Population runGenerations(boolean elite, Population bestPop){
+    public void runGenerations(boolean elite){
         selection.prepare(getPopPool());
         System.out.println(getGenerationRun());
         for (int i = 0; i<getGenerationRun(); i++){
@@ -67,10 +67,9 @@ abstract public class ProblemDomain {
                 matingPool.set(0, bestPop);
             }
             promoteMatingPool(matingPool);
-            bestPop = generateFitnesses();
+            generateFitnesses();
             progressUpdate.accept(i, getGenerationRun());
         }
-        return bestPop;
     }
     
     public ArrayList<Population> mutate(ArrayList<Population> pool){
@@ -83,7 +82,7 @@ abstract public class ProblemDomain {
     
     public ArrayList<Population> getPopPool() { return populationPool;}
     
-    public abstract Population generateFitnesses();
+    public abstract void  generateFitnesses();
     
     public void setMutationRate(int mutate){
         mutationRate = mutate;
@@ -107,6 +106,9 @@ abstract public class ProblemDomain {
     public void newGeneration(){
         generationCount++;
     }
+    
+    public Population getBestPop() {return bestPop;}
+    public int getBestPopValue() {return bestPop.getFitness();}
     
     abstract protected int fitness(Population pop);
 } // end of class ProblemDomain

@@ -82,26 +82,26 @@ public class TSM extends ProblemDomain{
             populationPool.add(pop);
         }
         populationHistory = new ArrayList<>();
-        bestPop = generateFitnesses();
+        generateFitnesses();
     }
     
-    public final Population generateFitnesses(){
+    public final void generateFitnesses(){
         populationPool.get(0).setFitness(fitness(populationPool.get(0)));
-        bestPop = populationPool.get(0);
-        int bestValue = bestPop.getFitness();
+        Population currentBest = populationPool.get(0);
+        int bestValue = currentBest.getFitness();
         for (Population pop : populationPool){
             pop.setFitness(fitness(pop));
             if (pop.getFitness() < bestValue){
-                bestPop = pop;
+                currentBest = pop;
                 bestValue = pop.getFitness();
             }
         }
         
-        if (populationHistory.size()==0 || populationHistory.get(populationHistory.size()-1)!= bestPop){
-            populationHistory.add(bestPop);
-            System.out.println(bestPop.getGeneration() + Arrays.toString(bestPop.getPop()) + " " + bestPop.getFitness());
+        if (populationHistory.size()==0 
+         || populationHistory.get(populationHistory.size()-1).getFitness()> bestValue){
+            bestPop = currentBest;
+            populationHistory.add(currentBest);
         }
-        return bestPop;
     }
     
     @Override

@@ -98,7 +98,7 @@ public class FXML_TSM_Controller implements Initializable {
         inputStage.setTitle("Cost Matrix");
         inputStage.setScene(newScene);
         FXMLCostMatrixController cmc = loader.<FXMLCostMatrixController>getController();
-        cmc.buildCostMatrix(tsm.getCostMatrix(),tsm.bestPop);
+        cmc.buildCostMatrix(tsm.getCostMatrix(),tsm.getBestPop());
         inputStage.showAndWait();
     }
     
@@ -123,7 +123,6 @@ public class FXML_TSM_Controller implements Initializable {
     private TSM tsm;
     private GraphicsContext gc;
     private int currentRoute;
-    private Population bestPop = null;
     private boolean elitism = true;
     private final int MAP_SCALE = 10;
 
@@ -157,7 +156,7 @@ public class FXML_TSM_Controller implements Initializable {
             tsm.crossover = new PMX(); // OX();
         }
         // Evaluate
-        bestPop = tsm.generateFitnesses();
+        tsm.generateFitnesses();
         
         currentRoute = 0;
         drawCities(event);
@@ -181,7 +180,7 @@ public class FXML_TSM_Controller implements Initializable {
                         rcProgressBar.setMinHeight(30);
                         rcProgressBar.setMaxHeight(30);
                     }
-                    bestPop = tsm.runGenerations(elitism, bestPop);
+                    tsm.runGenerations(elitism);
                     return null;
                 }
             };
@@ -211,7 +210,7 @@ public class FXML_TSM_Controller implements Initializable {
         // Display
         lblIndividual.setText("Route "+(currentRoute+1)+" of "+ (int)sldrPopulation.getValue());
         lblRouteDistance.setText("Distance ");
-        lblBestPop.setText("Best route" + bestPop.getFitness());
+        lblBestPop.setText("Best route" + tsm.getBestPopValue());
         displayMap();
         if (tsm != null){
             displayLocations();
@@ -219,7 +218,7 @@ public class FXML_TSM_Controller implements Initializable {
                 displayRoute();
             }
             if (cbShowBestRoute.isSelected()){
-                drawRoute(bestPop);
+                drawRoute(tsm.getBestPop());
             }
         }
     }
@@ -230,7 +229,7 @@ public class FXML_TSM_Controller implements Initializable {
         // Display
         lblIndividual.setText("Route "+(currentRoute+1)+" of "+ (int)sldrPopulation.getValue());
         lblRouteDistance.setText("Distance ");
-        lblBestPop.setText("Best route" + bestPop.getFitness());
+        lblBestPop.setText("Best route" + tsm.getBestPopValue());
         drawCities(event);
     }
     
@@ -370,7 +369,7 @@ public class FXML_TSM_Controller implements Initializable {
         int[] route = pop.getPop();
         ArrayList<Point> cities = tsm.getCityList();
         Point p0 = cities.get(route[0]);
-        if (pop == bestPop){
+        if (pop == tsm.getBestPop()){
             gc.setStroke(Color.rgb(255,80,80));
         } else {
             gc.setStroke(Color.rgb(80,80,255));
