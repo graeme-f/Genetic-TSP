@@ -5,6 +5,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -36,6 +37,7 @@
                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints fx:id="rcProgressBar" maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -47,14 +49,14 @@
                      </children>
                   </Pane>
                   <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateAction" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                  <Button fx:id="btnNextIndividual" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Button fx:id="btnNextIndividual" disable="true" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                   <Label fx:id="lblIndividual" text="Route 1 of n" GridPane.rowIndex="9" />
                   <CheckBox fx:id="cbShowGrid" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Grid" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <CheckBox fx:id="cbShowRoute" mnemonicParsing="false" onAction="#drawCities" text="Show Route" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                   <Label fx:id="lblRouteDistance" text="Distance " GridPane.rowIndex="10" />
                   <Label fx:id="lblBestPop" text="Best route" GridPane.rowIndex="11" />
                   <CheckBox fx:id="cbShowBestRoute" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Best" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                  <Button fx:id="btnNextGeneration" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                  <Button fx:id="btnNextGeneration" alignment="TOP_LEFT" disable="true" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.rowIndex="12" />
                   <Button fx:id="btnShowCostMatrix" disable="true" mnemonicParsing="false" onAction="#showCostMatrix" text="Cost Matrix" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                   <Slider fx:id="sldrCities" blockIncrement="1.0" majorTickUnit="5.0" max="50.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
                   <Slider fx:id="sldrPopulation" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -87,7 +89,8 @@
                         <Slider fx:id="sldrEntries" blockIncrement="1.0" layoutY="1.0" majorTickUnit="2.0" max="10.0" min="1.0" minorTickCount="1" prefHeight="24.0" prefWidth="115.0" showTickMarks="true" snapToTicks="true" value="2.0" />
                      </children>
                   </Pane>
-                  <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                  <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                  <ProgressBar fx:id="pbNextGenerations" prefWidth="200.0" progress="0.0" visible="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="13" />
                </children>
             </GridPane>
             <Canvas fx:id="canvas" height="600.0" width="600.0" />

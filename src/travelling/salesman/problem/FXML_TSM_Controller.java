@@ -26,9 +26,9 @@ package travelling.salesman.problem;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,7 +40,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -72,7 +74,9 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private CheckBox  cbShowGrid;
     @FXML private Slider    sldrGenerations;
     @FXML private Button    btnNextGeneration;
+    @FXML private ProgressBar pbNextGenerations;
     @FXML private Button    btnShowHistory;
+    @FXML private RowConstraints rcProgressBar;
     
     @FXML private void showCostMatrix(ActionEvent event) {
         event.consume();
@@ -157,29 +161,44 @@ public class FXML_TSM_Controller implements Initializable {
         drawCities(event);
         tsm.getCostMatrix();
         btnShowCostMatrix.setDisable(false);
+        btnNextGeneration.setDisable(false);
+        btnNextIndividual.setDisable(false);
         ArrayList<Population> pool = tsm.getPopPool();
     }
 
     @FXML private void nextGeneration(ActionEvent event){
-        // TODO move some of this code into ProblemDomain ???
         if (tsm != null){
-            tsm.selection.prepare(tsm.getPopPool());
-            System.out.println(tsm.getGenerationRun());
-            for (int i = 0; i<tsm.getGenerationRun(); i++){
-                tsm.newGeneration();
-                ArrayList<Population> matingPool;
-                matingPool = tsm.selection.select(tsm.getPopPool());
-                matingPool = tsm.crossover.combine(matingPool, TSM.getGeneration());
-                matingPool = tsm.mutate(matingPool);
-                if (elitism){
-                    matingPool.set(0, bestPop);
+            // Create a background Task
+            Task<Void> task = new Task<Void>() {
+            @Override
+                protected Void call() throws Exception {
+                    tsm.setProgressUpdate((workDone, totalWork) -> 
+                        updateProgress(workDone, totalWork));
+                    if (tsm.getGenerationRun() > 5000){
+                        pbNextGenerations.setVisible(true);
+                        rcProgressBar.setMinHeight(30);
+                        rcProgressBar.setMaxHeight(30);
+                    }
+                    bestPop = tsm.runGenerations(elitism, bestPop);
+                    return null;
                 }
-                tsm.promoteMatingPool(matingPool);
-                bestPop = tsm.generateFitnesses();
-            }
+            };
+            task.setOnFailed(wse -> {
+                wse.getSource().getException().printStackTrace();
+            });
+
+            // If the task completed successfully, perform other updates here
+            task.setOnSucceeded(wse -> {
+                drawCities(event);
+                btnShowHistory.setDisable(false);
+                pbNextGenerations.setVisible(false);
+                rcProgressBar.setMinHeight(0);
+                rcProgressBar.setMaxHeight(0);
+            });
+            
+            pbNextGenerations.progressProperty().bind(task.progressProperty());
+            new Thread(task).start();
         }
-        drawCities(event);
-        btnShowHistory.setDisable(false);
     }
     
     @FXML private void elitism(ActionEvent event){

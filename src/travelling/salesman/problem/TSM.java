@@ -118,5 +118,4 @@ public class TSM extends ProblemDomain{
     
     public ArrayList<Point> getCityList() { return cityList;}
     public int[][] getCostMatrix() {return costMatrix;}
-    public ArrayList<Population> getPopPool() { return populationPool;}
 } // end of class TSM

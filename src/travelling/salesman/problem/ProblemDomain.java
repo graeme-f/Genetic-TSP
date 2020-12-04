@@ -25,7 +25,7 @@
 package travelling.salesman.problem;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.function.BiConsumer;
 
 /**
  *
@@ -42,12 +42,35 @@ abstract public class ProblemDomain {
     Crossover crossover;
     protected int mutationRate;
     protected int generationRun;
+    private BiConsumer<Integer, Integer> progressUpdate ;
 
     ProblemDomain(int popSize, int mutate, int generations){
         populationSize = popSize;
         mutationRate = mutate;
         generationRun = generations;
         generationCount = 0;
+    }
+    
+    public void setProgressUpdate(BiConsumer<Integer, Integer> progressUpdate) {
+        this.progressUpdate = progressUpdate ;
+    }
+    public Population runGenerations(boolean elite, Population bestPop){
+        selection.prepare(getPopPool());
+        System.out.println(getGenerationRun());
+        for (int i = 0; i<getGenerationRun(); i++){
+            newGeneration();
+            ArrayList<Population> matingPool;
+            matingPool = selection.select(getPopPool());
+            matingPool = crossover.combine(matingPool, TSM.getGeneration());
+            matingPool = mutate(matingPool);
+            if (elite){
+                matingPool.set(0, bestPop);
+            }
+            promoteMatingPool(matingPool);
+            bestPop = generateFitnesses();
+            progressUpdate.accept(i, getGenerationRun());
+        }
+        return bestPop;
     }
     
     public ArrayList<Population> mutate(ArrayList<Population> pool){
@@ -57,6 +80,10 @@ abstract public class ProblemDomain {
         }
         return pool;
     }
+    
+    public ArrayList<Population> getPopPool() { return populationPool;}
+    
+    public abstract Population generateFitnesses();
     
     public void setMutationRate(int mutate){
         mutationRate = mutate;
