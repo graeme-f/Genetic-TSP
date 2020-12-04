@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -76,6 +77,7 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Button    btnNextGeneration;
     @FXML private ProgressBar pbNextGenerations;
     @FXML private Button    btnShowHistory;
+    @FXML private RowConstraints rcTournamentEntries;
     @FXML private RowConstraints rcProgressBar;
     
     @FXML private void showCostMatrix(ActionEvent event) {
@@ -239,6 +241,23 @@ public class FXML_TSM_Controller implements Initializable {
         chbSelectionRule.getItems().add("Stochastic Universal Sampling");
         chbSelectionRule.getItems().add("Tournament");
         chbSelectionRule.setValue("Roulette");
+        chbSelectionRule.getSelectionModel().selectedItemProperty().addListener(new
+            ChangeListener<String>() {
+                public void changed(ObservableValue ov,
+                    String value, String new_value) {
+                        if ("Tournament".equals(new_value)){
+                            sldrEntries.setVisible(true);
+                            rcTournamentEntries.setMinHeight(30);
+                            rcTournamentEntries.setMaxHeight(30);
+                        } else {
+                            sldrEntries.setVisible(false);
+                            rcTournamentEntries.setMinHeight(0);
+                            rcTournamentEntries.setMaxHeight(0);
+                        }
+            }
+        });
+        
+        
         chbCrossoverRule.getItems().add("Partially Mapped Crossover");
         chbCrossoverRule.setValue("Partially Mapped Crossover");
         

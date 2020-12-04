@@ -28,7 +28,7 @@
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints fx:id="rcTournamentEntries" maxHeight="0.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -86,7 +86,7 @@
                   <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="7" />
                   <Pane style="-fx-background-color: #ddaa88;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
-                        <Slider fx:id="sldrEntries" blockIncrement="1.0" layoutY="1.0" majorTickUnit="2.0" max="10.0" min="1.0" minorTickCount="1" prefHeight="24.0" prefWidth="115.0" showTickMarks="true" snapToTicks="true" value="2.0" />
+                        <Slider fx:id="sldrEntries" blockIncrement="1.0" layoutY="1.0" majorTickUnit="2.0" max="10.0" min="1.0" minorTickCount="1" prefHeight="24.0" prefWidth="115.0" showTickMarks="true" snapToTicks="true" value="2.0" visible="false" />
                      </children>
                   </Pane>
                   <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="14" />
