@@ -24,7 +24,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.0" minWidth="10.0" prefWidth="115.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints fx:id="rcSource" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -41,56 +42,58 @@
                   <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="lblCities" text="Cities (10)" />
-                  <Label fx:id="lblPopulation" text="Population (10)" GridPane.rowIndex="2" />
-                  <Pane style="-fx-background-color: #ddaa88;" GridPane.rowIndex="4">
+                  <Label fx:id="lblCities" text="Cities (10)" GridPane.rowIndex="1" />
+                  <Label fx:id="lblPopulation" text="Population (10)" GridPane.rowIndex="3" />
+                  <Pane style="-fx-background-color: #ddaa88;" GridPane.rowIndex="5">
                      <children>
                         <Label fx:id="lblEntries" text="Entries (2)" />
                      </children>
                   </Pane>
-                  <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateAction" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                  <Button fx:id="btnNextIndividual" disable="true" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                  <Label fx:id="lblIndividual" text="Route 1 of n" GridPane.rowIndex="9" />
-                  <CheckBox fx:id="cbShowGrid" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Grid" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <CheckBox fx:id="cbShowRoute" mnemonicParsing="false" onAction="#drawCities" text="Show Route" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                  <Label fx:id="lblRouteDistance" text="Distance " GridPane.rowIndex="10" />
-                  <Label fx:id="lblBestPop" text="Best route" GridPane.rowIndex="11" />
-                  <CheckBox fx:id="cbShowBestRoute" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Best" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                  <Button fx:id="btnNextGeneration" alignment="TOP_LEFT" disable="true" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                  <Button fx:id="btnShowCostMatrix" disable="true" mnemonicParsing="false" onAction="#showCostMatrix" text="Cost Matrix" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <Slider fx:id="sldrCities" blockIncrement="1.0" majorTickUnit="5.0" max="50.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
-                  <Slider fx:id="sldrPopulation" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Pane style="-fx-background-color: #aa88dd;" GridPane.rowIndex="5">
+                  <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateAction" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <Button fx:id="btnNextIndividual" disable="true" mnemonicParsing="false" onAction="#nextRoute" text="Next" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                  <Label fx:id="lblIndividual" text="Route 1 of n" GridPane.rowIndex="10" />
+                  <CheckBox fx:id="cbShowGrid" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Grid" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="cbShowRoute" mnemonicParsing="false" onAction="#drawCities" text="Show Route" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                  <Label fx:id="lblRouteDistance" text="Distance " GridPane.rowIndex="11" />
+                  <Label fx:id="lblBestPop" text="Best route" GridPane.rowIndex="12" />
+                  <CheckBox fx:id="cbShowBestRoute" mnemonicParsing="false" onAction="#drawCities" selected="true" text="Show Best" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                  <Button fx:id="btnNextGeneration" alignment="TOP_LEFT" disable="true" mnemonicParsing="false" onAction="#nextGeneration" text="Next Generation" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                  <Button fx:id="btnShowCostMatrix" disable="true" mnemonicParsing="false" onAction="#showCostMatrix" text="Cost Matrix" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Slider fx:id="sldrCities" blockIncrement="1.0" majorTickUnit="5.0" max="50.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Slider fx:id="sldrPopulation" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" min="5.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Pane style="-fx-background-color: #aa88dd;" GridPane.rowIndex="6">
                      <children>
                         <Label text="Crossover Rule" />
                      </children>
                   </Pane>
-                  <Label fx:id="lblMutationRate" text="Mutation (10%)" GridPane.rowIndex="6" />
-                  <Pane style="-fx-background-color: #ddaa88;" GridPane.rowIndex="3">
+                  <Label fx:id="lblMutationRate" text="Mutation (10%)" GridPane.rowIndex="7" />
+                  <Pane style="-fx-background-color: #ddaa88;" GridPane.rowIndex="4">
                      <children>
                         <Label text="Selection Rule" />
                      </children>
                   </Pane>
-                  <Slider fx:id="sldrMutationRate" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" minorTickCount="1" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Pane style="-fx-background-color: #ddaa88;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Slider fx:id="sldrMutationRate" blockIncrement="1.0" majorTickUnit="5.0" max="25.0" minorTickCount="1" showTickMarks="true" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Pane style="-fx-background-color: #ddaa88;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
                         <ChoiceBox fx:id="chbSelectionRule" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #ddaa88;" />
                      </children>
                   </Pane>
-                  <Pane style="-fx-background-color: #aa88dd;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <Pane style="-fx-background-color: #aa88dd;" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
                         <ChoiceBox fx:id="chbCrossoverRule" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #aa88dd;" />
                      </children>
                   </Pane>
-                  <Slider fx:id="sldrGenerations" blockIncrement="0.5" majorTickUnit="1.0" max="6.0" minorTickCount="1" GridPane.rowIndex="12" />
-                  <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="7" />
-                  <Pane style="-fx-background-color: #ddaa88;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <Slider fx:id="sldrGenerations" blockIncrement="0.5" majorTickUnit="1.0" max="6.0" minorTickCount="1" GridPane.rowIndex="13" />
+                  <CheckBox fx:id="cbElitism" mnemonicParsing="false" onAction="#elitism" selected="true" text="Elitism" GridPane.rowIndex="8" />
+                  <Pane style="-fx-background-color: #ddaa88;" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
                         <Slider fx:id="sldrEntries" blockIncrement="1.0" layoutY="1.0" majorTickUnit="2.0" max="10.0" min="1.0" minorTickCount="1" prefHeight="24.0" prefWidth="115.0" showTickMarks="true" snapToTicks="true" value="2.0" visible="false" />
                      </children>
                   </Pane>
-                  <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-                  <ProgressBar fx:id="pbNextGenerations" prefWidth="200.0" progress="0.0" visible="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="13" />
+                  <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+                  <ProgressBar fx:id="pbNextGenerations" prefWidth="200.0" progress="0.0" visible="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="14" />
+                  <ChoiceBox fx:id="chbSource" prefWidth="150.0" GridPane.columnIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#saveCities" text="Save Cities" />
                </children>
             </GridPane>
             <Canvas fx:id="canvas" height="600.0" width="600.0" />

@@ -23,10 +23,14 @@
  */
 package travelling.salesman.problem;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -45,6 +49,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -53,6 +58,7 @@ import javafx.stage.Stage;
  */
 public class FXML_TSM_Controller implements Initializable {
     
+    @FXML private ChoiceBox chbSource;
     @FXML private Label     lblCities;
     @FXML private Slider    sldrCities;
     @FXML private Button    btnGenerate;
@@ -77,8 +83,25 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Button    btnNextGeneration;
     @FXML private ProgressBar pbNextGenerations;
     @FXML private Button    btnShowHistory;
+    @FXML private RowConstraints rcSource;
     @FXML private RowConstraints rcTournamentEntries;
     @FXML private RowConstraints rcProgressBar;
+    
+    @FXML private void saveCities(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save City Resource File");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TSP files (*.tsp)", "*.tsp");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(TravellingSalesmanProblem.primaryStage);
+
+        if (file != null) {
+            saveToFile(file);
+        }
+    }
     
     @FXML private void showCostMatrix(ActionEvent event) {
         event.consume();
@@ -135,6 +158,10 @@ public class FXML_TSM_Controller implements Initializable {
                      ,57
                      ,MAP_SCALE
                      , 20);
+        tsmInit();
+    }
+
+    private void tsmInit(){
         String selectionValue = (String)chbSelectionRule.getValue();
         switch (selectionValue) {
             case "Roulette":
@@ -159,14 +186,14 @@ public class FXML_TSM_Controller implements Initializable {
         tsm.generateFitnesses();
         
         currentRoute = 0;
-        drawCities(event);
+        drawCities();
         tsm.getCostMatrix();
         btnShowCostMatrix.setDisable(false);
         btnNextGeneration.setDisable(false);
         btnNextIndividual.setDisable(false);
-        ArrayList<Population> pool = tsm.getPopPool();
+        ArrayList<Population> pool = tsm.getPopPool();        
     }
-
+    
     @FXML private void nextGeneration(ActionEvent event){
         if (tsm != null){
             // Create a background Task
@@ -190,7 +217,7 @@ public class FXML_TSM_Controller implements Initializable {
 
             // If the task completed successfully, perform other updates here
             task.setOnSucceeded(wse -> {
-                drawCities(event);
+                drawCities();
                 btnShowHistory.setDisable(false);
                 pbNextGenerations.setVisible(false);
                 rcProgressBar.setMinHeight(0);
@@ -202,11 +229,11 @@ public class FXML_TSM_Controller implements Initializable {
         }
     }
     
-    @FXML private void elitism(ActionEvent event){
+    @FXML private void elitism(){
         elitism = cbElitism.isSelected();
     }
     
-    @FXML private void drawCities(ActionEvent event) {
+    @FXML private void drawCities() {
         // Display
         lblIndividual.setText("Route "+(currentRoute+1)+" of "+ (int)sldrPopulation.getValue());
         lblRouteDistance.setText("Distance ");
@@ -230,16 +257,43 @@ public class FXML_TSM_Controller implements Initializable {
         lblIndividual.setText("Route "+(currentRoute+1)+" of "+ (int)sldrPopulation.getValue());
         lblRouteDistance.setText("Distance ");
         lblBestPop.setText("Best route" + tsm.getBestPopValue());
-        drawCities(event);
+        drawCities();
     }
     
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        chbSource.getItems().add("Random");
+        chbSource.getItems().add("File");
+        chbSource.setValue("Random");
         chbSelectionRule.getItems().add("Roulette");        
         chbSelectionRule.getItems().add("Stochastic Universal Sampling");
         chbSelectionRule.getItems().add("Tournament");
         chbSelectionRule.setValue("Roulette");
+        chbSource.getSelectionModel().selectedItemProperty().addListener(new
+            ChangeListener<String>() {
+                public void changed(ObservableValue ov,
+                    String value, String new_value) {
+                        if ("File".equals(new_value)){
+                            sldrCities.setVisible(false);
+                            lblCities.setVisible(false);
+                            rcSource.setMinHeight(0);
+                            rcSource.setMaxHeight(0);
+                            FileChooser fileChooser = new FileChooser();
+                            fileChooser.setTitle("Open Resource File");
+                            fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+                            File file = fileChooser.showOpenDialog(TravellingSalesmanProblem.primaryStage);
+                            if (file != null) {
+                                openFile(file);
+                            }
+                        } else {
+                            sldrCities.setVisible(true);
+                            lblCities.setVisible(true);
+                            rcSource.setMinHeight(30);
+                            rcSource.setMaxHeight(30);
+                        }
+            }
+        });
         chbSelectionRule.getSelectionModel().selectedItemProperty().addListener(new
             ChangeListener<String>() {
                 public void changed(ObservableValue ov,
@@ -308,6 +362,44 @@ public class FXML_TSM_Controller implements Initializable {
         gc = canvas.getGraphicsContext2D();
         currentRoute = 0;
         displayMap();
+    } // end of method initialize
+    
+    private void openFile(File file) {
+        try {
+            Scanner sc = new Scanner(file);
+            ArrayList<String> cities = new ArrayList();
+            while(sc.hasNextLine()){
+                String line = sc.nextLine();
+                cities.add(line);
+            }  
+            sc.close();     //closes the scanner
+            tsm = new TSM((int)sldrPopulation.getValue()
+                     ,(int)sldrMutationRate.getValue()
+                     ,generationCount((int)sldrGenerations.getValue())
+                     ,cities
+                     ,57
+                     ,MAP_SCALE
+                     , 20);
+            tsmInit();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void saveToFile(File file){
+        try{
+            PrintWriter out = new PrintWriter(file);
+            ArrayList<Point> cities = tsm.getCityList();
+            for (int i = 0; i < cities.size(); i++){
+                String line = (int)cities.get(i).getX()/MAP_SCALE 
+                            + "," 
+                            + (int)cities.get(i).getY()/MAP_SCALE;
+                out.println(line);
+            }  
+            out.close();     //closes the scanner
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
     }
     
     private int generationCount(double g){

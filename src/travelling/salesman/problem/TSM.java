@@ -25,7 +25,6 @@
 package travelling.salesman.problem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -52,6 +51,17 @@ public class TSM extends ProblemDomain{
         generatePool();
     }
     
+    TSM (int popSize, int mutate, int generations, ArrayList cities, int size, int scale, int margin){
+        super(popSize, mutate, generations);
+        citySize = cities.size();
+        mapSize = size;
+        mapScale = scale;
+        mapMargin = margin;
+        costMatrix = new int[citySize][citySize];
+        generateCities(cities);
+        generateCost();
+        generatePool();
+    }
     
     public final void generateCities(){
         Random r = new Random();
@@ -63,6 +73,16 @@ public class TSM extends ProblemDomain{
         }
     }
 
+    public final void generateCities(ArrayList<String> cities){
+        cityList = new ArrayList<>();
+        for (int i = 0; i < citySize; i++){
+            String[] inputNumber =  cities.get(i).split(",");
+            int x = Integer.parseInt(inputNumber[0])*mapScale;
+            int y = Integer.parseInt(inputNumber[1])*mapScale;
+            cityList.add(new Point(x,y));
+        }        
+    }
+    
     public final void generateCost(){
          for (int i = 0; i < citySize; i++){
              Point p1 = cityList.get(i);
