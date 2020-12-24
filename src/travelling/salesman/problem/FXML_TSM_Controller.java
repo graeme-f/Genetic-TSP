@@ -66,6 +66,8 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private Label     lblPopulation;
     @FXML private Slider    sldrPopulation;
     @FXML private ChoiceBox chbSelectionRule;
+    @FXML private Label     lblCutoff;
+    @FXML private Slider    sldrCutoff;
     @FXML private Label     lblEntries;
     @FXML private Slider    sldrEntries;
     @FXML private ChoiceBox chbCrossoverRule;
@@ -84,6 +86,7 @@ public class FXML_TSM_Controller implements Initializable {
     @FXML private ProgressBar pbNextGenerations;
     @FXML private Button    btnShowHistory;
     @FXML private RowConstraints rcSource;
+    @FXML private RowConstraints rcTruncationCutoff;
     @FXML private RowConstraints rcTournamentEntries;
     @FXML private RowConstraints rcProgressBar;
     
@@ -172,6 +175,9 @@ public class FXML_TSM_Controller implements Initializable {
                 break;
             case "Tournament":
                 tsm.selection = new Tournament((int)sldrPopulation.getValue(), (int)sldrEntries.getValue());
+                break;
+            case "Truncation":
+                tsm.selection = new Truncation((int)sldrPopulation.getValue(), 75);
                 break;
             default:
                 break;
@@ -269,7 +275,18 @@ public class FXML_TSM_Controller implements Initializable {
         chbSelectionRule.getItems().add("Roulette");        
         chbSelectionRule.getItems().add("Stochastic Universal Sampling");
         chbSelectionRule.getItems().add("Tournament");
+        chbSelectionRule.getItems().add("Truncation");
+        // Set the default selction methof to be roulette
         chbSelectionRule.setValue("Roulette");
+        // Hide the controls for the other selection methods
+        sldrEntries.setVisible(false);
+        rcTournamentEntries.setMinHeight(0);
+        rcTournamentEntries.setMaxHeight(0);
+        lblCutoff.setVisible(false);
+        sldrCutoff.setVisible(false);
+        rcTruncationCutoff.setMinHeight(0);
+        rcTruncationCutoff.setMaxHeight(0);
+        
         chbSource.getSelectionModel().selectedItemProperty().addListener(new
             ChangeListener<String>() {
                 public void changed(ObservableValue ov,
@@ -307,6 +324,17 @@ public class FXML_TSM_Controller implements Initializable {
                             rcTournamentEntries.setMinHeight(0);
                             rcTournamentEntries.setMaxHeight(0);
                         }
+                        if ("Truncation".equals(new_value)){
+                            lblCutoff.setVisible(true);
+                            sldrCutoff.setVisible(true);
+                            rcTruncationCutoff.setMinHeight(30);
+                            rcTruncationCutoff.setMaxHeight(30);
+                        } else {
+                            lblCutoff.setVisible(false);
+                            sldrCutoff.setVisible(false);
+                            rcTruncationCutoff.setMinHeight(0);
+                            rcTruncationCutoff.setMaxHeight(0);
+                        }
             }
         });
         
@@ -326,6 +354,16 @@ public class FXML_TSM_Controller implements Initializable {
             lblPopulation.setText("Population (" + new_val.intValue() +")");
             sldrEntries.setMax(new_val.intValue());
         });
+
+        sldrCutoff.valueProperty().addListener((ObservableValue<? extends Number> ov
+                                                ,Number old_val
+                                                ,Number new_val) -> {
+            if (null!=tsm && (tsm.selection instanceof Truncation)){
+                ((Truncation)tsm.selection).setCutoffPercentage(new_val.intValue());
+            }
+            lblCutoff.setText("Cutoff (" + new_val.intValue() +"%)");
+        });
+        
 
         sldrEntries.valueProperty().addListener((ObservableValue<? extends Number> ov
                                                 ,Number old_val
