@@ -24,14 +24,13 @@
 
 package travelling.salesman.problem;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
  * Select a subsequence from p2 and copy it into f1 (offspring).
- * Create a mapping of the individuals that appear in the sub sequence
- * Copy the individuals from p1 to f1 that don't appear in the mapping
- * If the appear in the mapping then find the value to use by looking it up
- * This can result in multiple lookups being needed.
+ * Copy the elements that don't appear in the subsequence in order
+ * Starting with the first element after the subsequence
  * 
  * Example
  * 
@@ -45,24 +44,12 @@ import java.util.Random;
  * O2 = ( x x x | 2 7 1 | x x )
  * 
  * Then O1 is completed from P1 and O2 from P2
- * O1 = ( 3 4 x | 1 6 8 | x 5 )
- * O2 = ( 4 x 5 | 2 7 1 | 3 x )
- * 
- * The remaining element need to be looked up from the mapping
- * O1: 8-> 1 -> 2
- * O1: 6-> 7
- * giving
- * O1 = ( 3 4 2 | 1 6 8 | 7 5 )
- * 
- * likewise
- * O2: 2->1 ->8
- * O2: 7->6
- * giving
- * O2 = ( 4 8 5 | 2 7 1 | 3 6 )
+ * O1 = ( 4 2 7 | 1 6 8 | 5 3 )
+ * O2 = ( 5 6 8 | 2 7 1 | 3 4 )
  * 
  * @author gfoster
  */
-public class PMX extends Crossover {
+public class OX extends Crossover {
     @Override
     protected Population[] crossover(Population pop1, Population pop2, int generation){
         Random r = new Random();
@@ -74,36 +61,51 @@ public class PMX extends Crossover {
         int[] offspring2 = new int[size];
         int subsequenceStart = r.nextInt(size);
         int subsequenceEnd = r.nextInt(size-subsequenceStart)+subsequenceStart+1;
-        int [] mapping1 = new int[subsequenceEnd-subsequenceStart];
-        int [] mapping2 = new int[subsequenceEnd-subsequenceStart];
         // crossover copy from other parent to offspring
         for (int i = subsequenceStart; i < subsequenceEnd; i++){
             offspring1[i] = p2[i];
-            mapping1[i-subsequenceStart] = p2[i];
             offspring2[i] = p1[i];
-            mapping2[i-subsequenceStart] = p1[i];
         }
-        // copy from parent to offspring if no conflict otherwise use the mapping
-        for (int i = 0; i < subsequenceStart; i++){
-            offspring1[i]=mapping(mapping1,mapping2,p1[i]);
-            offspring2[i]=mapping(mapping2,mapping1,p2[i]);
-        }
-        // copy from parent to offspring if no conflict otherwise use the mapping
+        // copy the order of unused cities from the parent to offspring 
+        // starting at the end of the subsequence.
+        int next1 = subsequenceEnd%size;
+        int next2 = subsequenceEnd%size;
         for (int i = subsequenceEnd; i < size; i++){
-            offspring1[i]=mapping(mapping1,mapping2,p1[i]);
-            offspring2[i]=mapping(mapping2,mapping1,p2[i]);            
+            boolean contains1 = false;
+            boolean contains2 = false;
+            for (int c = subsequenceStart; c < subsequenceEnd; c++){
+                if ((p1[i]) == offspring1[c]) contains1 = true;
+                if ((p2[i]) == offspring2[c]) contains2 = true;
+            }
+            if (!contains1){
+                offspring1[next1] = p1[i];
+                next1 = (next1+1)%size;
+            }
+            if (!contains2){
+                offspring2[next2] = p2[i];
+                next2 = (next2+1)%size;
+            }
+        }
+        for (int i = 0; i < subsequenceEnd; i++){
+            boolean contains1 = false;
+            boolean contains2 = false;
+            for (int c = subsequenceStart; c < subsequenceEnd; c++){
+                if ((p1[i]) == offspring1[c]) contains1 = true;
+                if ((p2[i]) == offspring2[c]) contains2 = true;
+            }
+            if (!contains1){
+                offspring1[next1] = p1[i];
+                next1 = (next1+1)%size;
+            }
+            if (!contains2){
+                offspring2[next2] = p2[i];
+                next2 = (next2+1)%size;
+            }
         }
         result[0] = new Population(offspring1, generation);
         result[1] = new Population(offspring2, generation);
         // display crossover result
         return result;
     }
-    
-    private int mapping(int[] mapA, int[] mapB, int t){
-        for (int i=0; i < mapA.length; i++){
-            if (mapA[i]==t)
-                return mapping(mapA, mapB, mapB[i]);
-        }
-        return t;
-    }
-} // end of class PMX
+
+} // end of class OX
