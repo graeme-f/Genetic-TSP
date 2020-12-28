@@ -79,10 +79,12 @@ public class Population {
     
     public void mutate(int mutationRate){
         Random r = new Random();
-        for (int i = 0; i < individuals.length; i++) {
+        // Because we rotate the population around so that it always starts with the first cty
+        // Don't mutate the first city.
+        for (int i = 1; i < individuals.length; i++) {
             int chance = r.nextInt(100);
             if (mutationRate>chance){
-                int swap = r.nextInt(individuals.length);
+                int swap = r.nextInt(individuals.length-1)+1;
                 int  temp = individuals[swap];
                 individuals[swap] = individuals[i];
                 individuals[i] = temp;

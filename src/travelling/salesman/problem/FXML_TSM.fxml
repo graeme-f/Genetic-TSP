@@ -92,7 +92,7 @@
                      </children>
                   </Pane>
                   <Button fx:id="btnShowHistory" disable="true" mnemonicParsing="false" onAction="#showHistory" text="Show History" GridPane.columnIndex="1" GridPane.rowIndex="16" />
-                  <ProgressBar fx:id="pbNextGenerations" prefWidth="200.0" progress="0.0" visible="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="15" />
+                  <ProgressBar fx:id="pbNextGenerations" disable="true" prefWidth="200.0" progress="0.0" visible="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="15" />
                   <ChoiceBox fx:id="chbSource" prefWidth="150.0" GridPane.columnIndex="1" />
                   <Button mnemonicParsing="false" onAction="#saveCities" text="Save Cities" />
                   <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ddaa88;" GridPane.rowIndex="5">

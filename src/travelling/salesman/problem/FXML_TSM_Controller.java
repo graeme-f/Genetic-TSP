@@ -186,8 +186,11 @@ public class FXML_TSM_Controller implements Initializable {
         if ("Partially Mapped Crossover".equals(value)){
             tsm.crossover = new PMX();
         } else if  ("Order Crossover".equals(value)){
-            tsm.crossover = new OX(); // OX();
+            tsm.crossover = new OX();
+        } else if  ("Cycle Crossover".equals(value)){
+            tsm.crossover = new CX();
         }
+
         // Evaluate
         tsm.generateFitnesses();
         
@@ -341,6 +344,7 @@ public class FXML_TSM_Controller implements Initializable {
         
         chbCrossoverRule.getItems().add("Partially Mapped Crossover");
         chbCrossoverRule.getItems().add("Order Crossover");
+        chbCrossoverRule.getItems().add("Cycle Crossover");
         chbCrossoverRule.setValue("Partially Mapped Crossover");
         
         sldrCities.valueProperty().addListener((ObservableValue<? extends Number> ov
