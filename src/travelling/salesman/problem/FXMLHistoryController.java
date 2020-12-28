@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -79,6 +78,10 @@ public class FXMLHistoryController implements Initializable  {
             gc.fillText(Integer.toString(yValue), 0, 15+40*i);
             yValue -= verticalMax/10;
             gc.strokeLine(35, 10+40*i, 45, 10+40*i);
+            // add a horizonatl guide line
+            gc.setLineDashes(2d);
+            gc.strokeLine(40, 10+40*i, 660, 10+40*i);
+            gc.setLineDashes();
         }
         
         gc.setTextAlign(TextAlignment.CENTER);
@@ -87,7 +90,11 @@ public class FXMLHistoryController implements Initializable  {
             for (int i = 0; i < 10; i++){
                 gc.fillText(Integer.toString(xValue), 100+60*i, 415);
                 xValue += horizontalMax/10;
+                // add the horizontal tick marks
                 gc.strokeLine(100+60*i, 405, 100+60*i, 395);
+                // add a vertical guide line
+                gc.setLineDashes(2d);
+                gc.strokeLine(100+60*i, 0, 100+60*i, 390);
             }
         } else {
             int xValue = 10;
@@ -95,9 +102,21 @@ public class FXMLHistoryController implements Initializable  {
             for (int i = 0; i < horizontalMax; i++){
                 gc.fillText(Integer.toString(xValue), 40+xGap*(i+1), 415);
                 xValue *= 10;
+                // add the horizontal tick marks
                 gc.strokeLine(40+xGap*(i+1), 405, 40+xGap*(i+1), 395);                
+                // add a vertical guide line
+                gc.setLineDashes(2d);
+                gc.strokeLine(40+xGap*(i+1), 0, 40+xGap*(i+1), 390);
+                // add intermediate guide lines (to emphasis the log scale)
+                gc.setLineWidth(0.5);
+                for (int j = 2; j<10; j++){
+                    double offset = i+Math.log10(j);
+                    gc.strokeLine(40+xGap*offset, 0, 40+xGap*offset, 390);                
+                }
+                gc.setLineWidth(1);
             }
         }
+        gc.setLineDashes();
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("0", 37, 405);
         
